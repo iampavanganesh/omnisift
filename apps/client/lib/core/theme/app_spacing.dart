@@ -8,4 +8,9 @@ abstract final class AppSpacing {
   static const double xxl = 32;
   static const double xxxl = 48;
   static const double huge = 64;
+  // Extended scale per design spec.
+  static const double xxs = 20;
+  static const double mega = 40;
+  static const double giant = 80;
+  static const double colossal = 96;
 }
