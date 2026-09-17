@@ -23,24 +23,28 @@ class FilterSortPill extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) => InkWell(
-        onTap: onTap,
-        borderRadius: AppRadius.all(AppRadius.lg),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 6),
-          decoration: BoxDecoration(
-            color: active ? AppColors.primary.withValues(alpha: 0.08) : Colors.transparent,
-            borderRadius: AppRadius.all(AppRadius.lg),
-            border: Border.all(color: active ? AppColors.primary : AppColors.border),
+  Widget build(BuildContext context) => Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: AppRadius.all(AppRadius.lg),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 6),
+            decoration: BoxDecoration(
+              color: active ? AppColors.primary.withValues(alpha: 0.08) : Colors.transparent,
+              borderRadius: AppRadius.all(AppRadius.lg),
+              border: Border.all(color: active ? AppColors.primary : AppColors.border),
+            ),
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              Icon(icon, size: 16, color: active ? AppColors.primary : AppColors.textSecondary),
+              const SizedBox(width: 4),
+              Text(label,
+                  style: AppTypography.caption.copyWith(
+                      color: active ? AppColors.primary : AppColors.textSecondary,
+                      fontWeight: FontWeight.w600)),
+            ]),
           ),
-          child: Row(mainAxisSize: MainAxisSize.min, children: [
-            Icon(icon, size: 16, color: active ? AppColors.primary : AppColors.textSecondary),
-            const SizedBox(width: 4),
-            Text(label,
-                style: AppTypography.caption.copyWith(
-                    color: active ? AppColors.primary : AppColors.textSecondary,
-                    fontWeight: FontWeight.w600)),
-          ]),
         ),
       );
 }

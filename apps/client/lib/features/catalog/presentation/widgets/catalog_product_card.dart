@@ -35,6 +35,9 @@ class CatalogProductCard extends StatelessWidget {
             color: AppColors.surface,
             borderRadius: AppRadius.all(AppRadius.lg),
             border: Border.all(color: AppColors.border),
+            boxShadow: [
+              BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 6, offset: const Offset(0, 2)),
+            ],
           ),
           // This card sits in a GridView with a fixed childAspectRatio — at
           // large system font scaling, unclamped text would overflow the

@@ -11,9 +11,16 @@ class PrimaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilledButton(
       onPressed: loading ? null : onPressed,
-      child: loading
-          ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
-          : Text(label),
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 200),
+        child: loading
+            ? const SizedBox(
+                key: ValueKey('loader'),
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(strokeWidth: 2))
+            : Text(label, key: const ValueKey('label')),
+      ),
     );
   }
 }

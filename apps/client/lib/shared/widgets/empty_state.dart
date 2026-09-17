@@ -32,11 +32,21 @@ class EmptyState extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 64, color: AppColors.textDisabled),
-              const SizedBox(height: AppSpacing.md),
+              Container(
+                width: 96,
+                height: 96,
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.06),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, size: 48, color: AppColors.textDisabled),
+              ),
+              const SizedBox(height: AppSpacing.lg),
               Text(title, style: AppTypography.title, textAlign: TextAlign.center),
               const SizedBox(height: AppSpacing.xs),
-              Text(subtitle, style: AppTypography.body, textAlign: TextAlign.center),
+              Text(subtitle,
+                  style: AppTypography.body.copyWith(color: AppColors.textSecondary),
+                  textAlign: TextAlign.center),
               if (onAction != null) ...[
                 const SizedBox(height: AppSpacing.lg),
                 OutlinedButton(onPressed: onAction, child: Text(actionLabel ?? 'Retry')),

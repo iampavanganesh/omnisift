@@ -4,7 +4,7 @@ import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 
 /// Skeleton block — show structure before data (never full-screen spinners).
-/// Pulses gently, mirroring the web app's `@keyframes skeleton-pulse`.
+/// Shimmers left-to-right, mirroring the web app's `@keyframes skeleton-shimmer`.
 class SkeletonBox extends StatefulWidget {
   const SkeletonBox({this.height = 16, this.width = double.infinity, this.borderRadius, super.key});
   final double height;
@@ -18,9 +18,9 @@ class SkeletonBox extends StatefulWidget {
 class _SkeletonBoxState extends State<SkeletonBox> with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 900),
-  )..repeat(reverse: true);
-  late final Animation<double> _opacity = Tween<double>(begin: 0.5, end: 1.0).animate(
+    duration: const Duration(milliseconds: 1400),
+  )..repeat();
+  late final Animation<double> _shimmer = Tween<double>(begin: -1, end: 2).animate(
     CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
   );
 
@@ -31,17 +31,30 @@ class _SkeletonBoxState extends State<SkeletonBox> with SingleTickerProviderStat
   }
 
   @override
-  Widget build(BuildContext context) => FadeTransition(
-        opacity: _opacity,
-        child: Container(
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _shimmer,
+      builder: (context, _) {
+        final t = _shimmer.value;
+        return Container(
           height: widget.height,
           width: widget.width,
           decoration: BoxDecoration(
-            color: AppColors.border,
             borderRadius: widget.borderRadius ?? AppRadius.all(AppRadius.sm),
+            gradient: LinearGradient(
+              begin: Alignment(t - 0.3, 0),
+              end: Alignment(t + 0.3, 0),
+              colors: [
+                AppColors.border,
+                AppColors.background,
+                AppColors.border,
+              ],
+            ),
           ),
-        ),
-      );
+        );
+      },
+    );
+  }
 }
 
 /// Skeleton for a simple ListTile row (circular leading + title + subtitle) —
