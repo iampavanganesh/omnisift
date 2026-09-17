@@ -250,7 +250,18 @@ img {
   border-radius: 50%;
   border: 3px solid var(--color-border);
   border-top-color: var(--color-accent);
-  animation: spin 0.8s linear infinite;
+  animation: spin 0.8s linear infinite, fade-in 0.3s ease;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes spin {
@@ -277,11 +288,27 @@ img {
 .skeleton-chip {
   background: var(--color-border);
   border-radius: var(--radius-sm);
-  animation: skeleton-pulse 1.4s ease-in-out infinite;
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+  background: linear-gradient(
+    90deg,
+    var(--color-border) 0%,
+    var(--color-bg-subtle) 40%,
+    var(--color-border) 80%
+  );
+  background-size: 200% 100%;
 }
 
 .skeleton-card {
   pointer-events: none;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 .skeleton-line {
@@ -414,6 +441,12 @@ img {
   border-radius: 0 var(--radius-md) var(--radius-md) 0;
   padding: var(--space-2) var(--space-4);
   cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.header-search button:hover {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
 }
 
 .header-nav-desktop {
@@ -511,6 +544,14 @@ img {
   margin-bottom: var(--space-1);
 }
 
+.site-footer-grid a {
+  transition: color 0.15s ease;
+}
+
+.site-footer-grid a:hover {
+  color: var(--color-brand);
+}
+
 .footer-logo {
   width: 96px;
   height: auto;
@@ -532,7 +573,7 @@ img {
 
 .hero {
   text-align: center;
-  padding: var(--space-12) var(--space-4);
+  padding: var(--space-12) var(--space-4) var(--space-10);
   background: var(--color-cream);
   border-radius: var(--radius-lg);
 }
@@ -574,6 +615,12 @@ img {
   border-radius: 0 var(--radius-md) var(--radius-md) 0;
   padding: 0 var(--space-6);
   cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.hero-search button:hover,
+.hub-search button:hover {
+  background: var(--color-ink);
 }
 
 .hero-popular {
@@ -663,12 +710,13 @@ img {
   border-radius: var(--radius-md);
   background: var(--color-bg);
   box-shadow: var(--shadow-sm);
-  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
 .brand-logo-card:hover {
   border-color: var(--color-accent);
   box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
 }
 
 .brand-mark {
@@ -729,12 +777,18 @@ img {
   font-size: var(--text-small-size);
   color: var(--color-accent-dark);
   font-weight: 600;
+  transition: opacity 0.15s ease;
+}
+
+.section-head a:hover {
+  opacity: 0.75;
 }
 
 .empty-state {
   color: var(--color-muted);
   background: var(--color-bg-subtle);
   border: 1px dashed var(--color-border);
+  border-left: 3px solid var(--color-accent);
   border-radius: var(--radius-md);
   padding: var(--space-6);
   font-size: var(--text-body-size);
@@ -769,6 +823,12 @@ img {
 .chip:hover {
   border-color: var(--color-accent);
   background: var(--color-bg-subtle);
+}
+
+.chip-active:hover {
+  border-color: var(--color-accent-dark);
+  background: var(--color-accent-dark);
+  color: white;
 }
 
 .chip-active {
@@ -815,8 +875,24 @@ img {
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x proximity;
-  padding-bottom: var(--space-2); /* room for the scrollbar so it doesn't sit on the cards */
+  scroll-behavior: smooth;
+  padding-bottom: var(--space-2);
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+.product-rail::-webkit-scrollbar {
+  height: 6px;
+}
+
+.product-rail::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.product-rail::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 999px;
 }
 
 .product-rail-item {
@@ -836,12 +912,13 @@ img {
   flex-direction: column;
   gap: var(--space-1);
   box-shadow: var(--shadow-sm);
-  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
 .product-card:hover {
   border-color: var(--color-accent);
   box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
 }
 
 .product-card-image {
@@ -933,10 +1010,28 @@ img {
   border: 1px solid var(--color-brand);
 }
 
+.button-primary:hover {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+}
+
+.button-primary:active {
+  transform: scale(0.98);
+}
+
 .button-secondary {
   background: var(--color-bg);
   color: var(--color-brand);
   border: 1px solid var(--color-brand);
+}
+
+.button-secondary:hover {
+  background: var(--color-cream);
+  border-color: var(--color-ink);
+}
+
+.button-secondary:active {
+  transform: scale(0.98);
 }
 
 .button-small {
@@ -952,6 +1047,11 @@ img {
   border-radius: var(--radius-md);
   padding: var(--space-4);
   box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease;
+}
+
+.omni-card:hover {
+  box-shadow: var(--shadow-md);
 }
 
 .omni-headline {
@@ -1063,6 +1163,15 @@ img {
 .seller-table td {
   padding: var(--space-3);
   border-bottom: 1px solid var(--color-border);
+  transition: background 0.15s ease;
+}
+
+.seller-table tbody tr:hover td {
+  background: var(--color-bg-subtle);
+}
+
+.seller-table tbody tr.seller-row-best:hover td {
+  background: var(--color-accent-soft);
 }
 
 .seller-row-best {
@@ -1219,6 +1328,12 @@ img {
   flex-direction: column;
   gap: var(--space-1);
   box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.review-card:hover {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-md);
 }
 
 .review-card-head {
@@ -1265,6 +1380,13 @@ img {
   flex-direction: column;
   gap: var(--space-1);
   box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.guide-card:hover {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
 }
 
 .guide-updated {
@@ -1310,7 +1432,17 @@ input:focus-visible,
 
 @media (prefers-reduced-motion: reduce) {
   .loading-spinner,
-  .skeleton-block {
+  .skeleton-block,
+  .skeleton-line,
+  .skeleton-chip {
     animation: none;
+  }
+  .product-card:hover,
+  .brand-logo-card:hover,
+  .guide-card:hover {
+    transform: none;
+  }
+  .product-rail {
+    scroll-behavior: auto;
   }
 }
