@@ -1,0 +1,17 @@
+name: mobile-ci
+on:
+  push: { paths: ['apps/client/**'] }
+  pull_request: { paths: ['apps/client/**'] }
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: apps/client } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { channel: 'stable' }
+      - run: flutter pub get
+      - run: dart run build_runner build -d
+      - run: flutter analyze
+      - run: flutter test
+      - run: flutter build web

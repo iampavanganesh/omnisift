@@ -1,0 +1,36 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+
+# Node / Nest
+node_modules/
+dist/
+coverage/
+*.log
+.env
+.env.*
+!.env.example
+
+# Prisma
+apps/backend/prisma/*.db
+
+# Flutter / Dart
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+*.g.dart
+*.freezed.dart
+ios/Pods/
+android/.gradle/
+
+# Secrets
+*.pem
+*.key
+google-services.json
+GoogleService-Info.plist
+firebase-service-account.json

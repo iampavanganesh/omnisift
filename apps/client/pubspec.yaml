@@ -1,0 +1,82 @@
+name: omnisift
+description: Omnisift — Buy with Confidence.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.5.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  # state + DI
+  flutter_riverpod: ^3.0.0
+  riverpod_annotation: ^3.0.0
+  # navigation
+  go_router: ^16.0.0
+  
+  # google sign-in
+  google_sign_in: ^7.0.0
+
+  # networking
+  dio: ^5.7.0
+  # models
+  freezed_annotation: ^3.0.0
+  json_annotation: ^4.9.0
+  # storage
+  flutter_secure_storage: ^9.2.2
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  # backend + platform
+  supabase_flutter: ^2.16.0
+  firebase_core: ^4.0.0
+  firebase_analytics: ^12.0.0
+  firebase_crashlytics: ^5.0.0
+  firebase_performance: ^0.11.0
+  firebase_messaging: ^16.0.0
+  flutter_local_notifications: ^18.0.1
+  # ui
+  cached_network_image: ^3.4.1
+  url_launcher: ^6.3.0
+  intl: ^0.20.2
+  fl_chart: ^1.2.0
+  flutter_svg: ^2.0.10
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  build_runner: ^2.4.13
+  freezed: ^3.0.0
+  json_serializable: ^6.8.0
+  riverpod_generator: ^3.0.0
+  custom_lint: ^0.8.0
+  riverpod_lint: ^3.0.0
+  very_good_analysis: ^7.0.0
+  flutter_launcher_icons: ^0.14.3
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/branding/
+
+# Source of truth for these SVGs is packages/design-system/ — mirrored by hand into
+# assets/branding/ until a real token/asset pipeline exists (same pattern as apps/web's
+# globals.css). Android + Web only — iOS/macOS/Windows/Linux stay untouched; they're
+# out of V1 scope per ARCHITECTURE.md §14.
+flutter_launcher_icons:
+  image_path: "assets/branding/app-icon-1024.png"
+  android: true
+  ios: false
+  web:
+    generate: true
+    image_path: "assets/branding/app-icon-1024.png"
+    background_color: "#3B2314"
+    theme_color: "#3B2314"
+  windows:
+    generate: false
+  macos:
+    generate: false

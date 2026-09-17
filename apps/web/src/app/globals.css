@@ -1,0 +1,1316 @@
+/*
+ * Design tokens below mirror packages/design-system/tokens.json — keep them in sync by
+ * hand until a real build-time token pipeline exists (ADR-0003 §"design-system" note).
+ *
+ * Palette is warm/editorial by design (cream, ivory, dark chocolate brown, soft gold) —
+ * this is OmniSift's frozen brand identity: refine it, never replace it with a
+ * blue/purple SaaS theme, gradients-as-branding, or glassmorphism.
+ *
+ * Breakpoints (documented reference — CSS custom properties can't be used inside
+ * @media conditions, so every @media rule in this file uses these values literally):
+ *   1440px  large desktop
+ *   1280px  desktop
+ *   1024px  small desktop / tablet landscape — nav collapses to the mobile menu below this
+ *   768px   tablet portrait — multi-column layouts drop to single/stacked below this
+ *   <480px  phone
+ */
+:root {
+  /* ---- color: brand + ink ---- */
+  --color-ink: #2b1b12;
+  --color-brand: #3b2314;
+  --color-accent: #e3a73a;
+  /* Darkened from the original #c98f26 (2.8:1 on white — fails WCAG AA's 4.5:1
+     for text) to #916a1d (4.9:1) — same gold hue, used everywhere this token
+     is TEXT (eyebrows, "View all" links, star ratings). --color-accent itself
+     stays light gold since every other usage is a border/background/SVG
+     stroke, not text, so it isn't subject to the same contrast requirement. */
+  --color-accent-dark: #916a1d;
+  --color-accent-soft: #f9e8c9;
+
+  /* ---- color: warm neutral ramp (cream → beige → charcoal) ---- */
+  --color-bg: #ffffff;
+  --color-bg-subtle: #faf7f2;
+  --color-cream: #fbf6ec;
+  --color-beige: #f1e6d3;
+  --color-charcoal: #34302c;
+  --color-border: #e7dfd3;
+  --color-muted: #7a6a5c;
+
+  /* ---- color: semantic state — green is ALWAYS positive/deal, red is ALWAYS
+     negative/urgent only; never used as decoration ---- */
+  /* Darkened from #1f9d55 (3.1:1 on --color-success-soft — fails WCAG AA's
+     4.5:1) to #18773f (4.9:1). Same for danger: #d64545 (3.7:1) → #b82d28
+     (5.1:1). Both -soft backgrounds are unchanged (fine as fills, the text
+     drawn on top is what needed the fix). */
+  --color-success: #18773f;
+  --color-success-soft: #e3f5e9;
+  --color-danger: #b82d28;
+  --color-danger-soft: #fbe7e7;
+
+  /* ---- spacing ---- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* ---- radius — restrained on purpose; do not introduce larger values ---- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  /* ---- shadow — warm-tinted (off the ink color, not generic grey), restrained ---- */
+  --shadow-sm: 0 1px 2px rgba(43, 27, 18, 0.06);
+  --shadow-md: 0 4px 14px rgba(43, 27, 18, 0.09);
+  --shadow-lg: 0 16px 36px rgba(43, 27, 18, 0.14);
+
+  --font-sans:
+    system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* ---- typography scale — every heading/body/price/meta size in this file should
+     reference one of these triples, never a one-off rem/px value ---- */
+  --text-display-size: 2.75rem; /* home hero H1 */
+  --text-display-weight: 800;
+  --text-display-line: 1.1;
+
+  --text-h1-size: 2rem; /* category/brand/product page H1 */
+  --text-h1-weight: 700;
+  --text-h1-line: 1.15;
+
+  --text-h2-size: 1.5rem; /* major sub-section heading */
+  --text-h2-weight: 700;
+  --text-h2-line: 1.2;
+
+  --text-h3-size: 1.25rem; /* rail/grid section heading */
+  --text-h3-weight: 700;
+  --text-h3-line: 1.3;
+
+  --text-section-title-size: 1.05rem; /* card-group label */
+  --text-section-title-weight: 600;
+  --text-section-title-line: 1.3;
+
+  --text-body-size: 0.95rem; /* default paragraph / product name */
+  --text-body-weight: 400;
+  --text-body-line: 1.55;
+
+  --text-small-size: 0.85rem; /* nav links, buttons, chips */
+  --text-small-weight: 500;
+  --text-small-line: 1.4;
+
+  --text-caption-size: 0.75rem; /* eyebrow, brand label, tags */
+  --text-caption-weight: 600;
+  --text-caption-line: 1.3;
+
+  --text-price-size: 1.375rem; /* product-card price */
+  --text-price-weight: 700;
+  --text-price-line: 1.2;
+
+  --text-price-lg-size: 1.85rem; /* product page hero price */
+  --text-price-lg-weight: 800;
+  --text-price-lg-line: 1.1;
+
+  --text-discount-size: 0.75rem; /* discount/deal badges */
+  --text-discount-weight: 700;
+  --text-discount-line: 1.3;
+
+  --text-metadata-size: 0.8rem; /* seller/rating/date meta lines */
+  --text-metadata-weight: 500;
+  --text-metadata-line: 1.4;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+main {
+  flex: 1;
+}
+
+img {
+  max-width: 100%;
+}
+
+/* ---------- layout shells ---------- */
+
+.home-page,
+.hub-page,
+.index-page,
+.product-page,
+.search-page,
+.guide-page {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-4) var(--space-12);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.legal-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-4) var(--space-12);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.legal-page h2 {
+  margin-top: var(--space-4);
+}
+
+.legal-page p,
+.legal-page li {
+  color: var(--color-muted);
+  line-height: var(--text-body-line);
+}
+
+.legal-page ul {
+  padding-left: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.legal-updated {
+  font-size: var(--text-small-size);
+}
+
+.placeholder-notice {
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  font-size: var(--text-small-size);
+  color: var(--color-ink);
+}
+
+.status-page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: var(--space-12) var(--space-4);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.status-code {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent-dark);
+}
+
+.status-actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.loading-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-12) var(--space-4);
+  min-height: 40vh;
+}
+
+.loading-spinner {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-accent);
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- skeletons — content-shaped loading placeholders, never a
+   full-page spinner for a section that already knows its final shape ---------- */
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.skeleton-block,
+.skeleton-line,
+.skeleton-chip {
+  background: var(--color-border);
+  border-radius: var(--radius-sm);
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+.skeleton-card {
+  pointer-events: none;
+}
+
+.skeleton-line {
+  height: 0.95em;
+  margin-top: var(--space-2);
+  border-radius: 4px;
+}
+
+.skeleton-chip {
+  height: 2.25rem;
+  border-radius: 999px;
+  background: var(--color-bg-subtle);
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: var(--text-caption-size);
+  font-weight: var(--text-caption-weight);
+  color: var(--color-accent-dark);
+  margin-bottom: var(--space-2);
+}
+
+/* ---------- header ---------- */
+
+.site-header {
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.site-header-row {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-6);
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-h3-size);
+  font-weight: var(--text-h3-weight);
+  color: var(--color-brand);
+  white-space: nowrap;
+}
+
+.wordmark-icon {
+  display: block;
+}
+
+.header-search {
+  flex: 1;
+  min-width: 0; /* flex items don't shrink below intrinsic content size by default —
+    without this an <input> can force the whole header to overflow at tablet widths */
+  display: flex;
+  max-width: 480px;
+}
+
+/* Wraps the <input> in every SearchBar instance (header/hero/hub) — takes the
+ * flex slot the input itself used to occupy, and anchors the suggestions
+ * dropdown to exactly the input's width regardless of which form it's in. */
+.search-bar-field {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+}
+
+.search-suggestions {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  left: 0;
+  right: 0;
+  z-index: 20;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  list-style: none;
+  overflow: hidden;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.search-suggestions-label {
+  padding: var(--space-2) var(--space-3) var(--space-1);
+  font-size: var(--text-caption-size);
+  font-weight: var(--text-caption-weight);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-muted);
+}
+
+.search-suggestions li button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: none;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-small-size);
+  color: var(--color-ink);
+  cursor: pointer;
+}
+
+.search-suggestions li button:hover,
+.search-suggestions li button.search-suggestion-active {
+  background: var(--color-accent-soft);
+}
+
+.header-search input {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-small-size);
+}
+
+.header-search button {
+  border: 1px solid var(--color-brand);
+  background: var(--color-brand);
+  color: white;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+}
+
+.header-nav-desktop {
+  display: flex;
+  gap: var(--space-4);
+  font-size: var(--text-small-size);
+  font-weight: var(--text-small-weight);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-left: auto;
+}
+
+.header-icon-link {
+  font-size: var(--text-small-size);
+  color: var(--color-muted);
+}
+
+.header-menu-toggle {
+  display: none;
+  border: none;
+  background: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+.header-nav-mobile {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .header-nav-desktop {
+    display: none;
+  }
+  .header-menu-toggle {
+    display: block;
+  }
+  .header-nav-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4) var(--space-4);
+    border-top: 1px solid var(--color-border);
+  }
+  .header-nav-mobile-wishlist {
+    font-weight: 600;
+    color: var(--color-brand);
+  }
+}
+
+/* Below 768px the search bar wraps onto its own full-width row (via `order` +
+ * `flex-basis`, same flex container as the logo/actions row — no duplicate
+ * markup) and the Wishlist text link steps out of the row entirely (still
+ * reachable from the mobile nav dropdown above) — this is what actually fixes
+ * the header overflowing at phone widths; see Phase 2 notes. */
+@media (max-width: 768px) {
+  .header-search {
+    order: 3;
+    flex-basis: 100%;
+    max-width: none;
+  }
+  .header-icon-link {
+    display: none;
+  }
+}
+
+/* ---------- footer ---------- */
+
+.site-footer {
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg-subtle);
+  margin-top: var(--space-12);
+}
+
+.site-footer-grid {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-4) var(--space-4);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--space-6);
+}
+
+.site-footer-grid > div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.footer-heading {
+  font-weight: 600;
+  margin-bottom: var(--space-1);
+}
+
+.footer-logo {
+  width: 96px;
+  height: auto;
+  margin-bottom: var(--space-1);
+}
+
+.footer-tagline {
+  color: var(--color-muted);
+}
+
+.footer-copy {
+  text-align: center;
+  padding: var(--space-4);
+  font-size: var(--text-metadata-size);
+  color: var(--color-muted);
+}
+
+/* ---------- hero ---------- */
+
+.hero {
+  text-align: center;
+  padding: var(--space-12) var(--space-4);
+  background: var(--color-cream);
+  border-radius: var(--radius-lg);
+}
+
+.hero h1 {
+  font-size: var(--text-display-size);
+  font-weight: var(--text-display-weight);
+  line-height: var(--text-display-line);
+  color: var(--color-brand);
+  margin-bottom: var(--space-3);
+}
+
+.hero-subtitle {
+  color: var(--color-muted);
+  margin-bottom: var(--space-6);
+}
+
+.hero-search,
+.hub-search {
+  display: flex;
+  max-width: 480px;
+  margin: 0 auto var(--space-4);
+}
+
+.hero-search input,
+.hub-search input {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+  padding: var(--space-3);
+  font-size: 1rem;
+}
+
+.hero-search button,
+.hub-search button {
+  border: none;
+  background: var(--color-brand);
+  color: white;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 0 var(--space-6);
+  cursor: pointer;
+}
+
+.hero-popular {
+  color: var(--color-muted);
+  font-size: var(--text-small-size);
+}
+
+.hero-popular a {
+  color: var(--color-accent-dark);
+  font-weight: 600;
+}
+
+/* ---------- hub hero (category/brand) ---------- */
+
+.hub-hero {
+  text-align: center;
+  padding: var(--space-10) var(--space-4);
+  background: var(--color-cream);
+  border-radius: var(--radius-lg);
+}
+
+.hub-hero h1 {
+  font-size: var(--text-h1-size);
+  font-weight: var(--text-h1-weight);
+  line-height: var(--text-h1-line);
+  color: var(--color-brand);
+  margin-bottom: var(--space-2);
+}
+
+.hub-tagline {
+  color: var(--color-ink);
+  font-size: var(--text-small-size);
+  margin-bottom: var(--space-2);
+}
+
+.hub-subtitle {
+  color: var(--color-muted);
+  margin-bottom: var(--space-4);
+}
+
+.sort-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+/* Deterministic per-category/per-brand gradient (see lib/accent-color.ts) —
+ * a stable visual identity, never a stock photo. Shared by category AND
+ * brand hero banners — same mechanism, same rule, for the same visual
+ * concept. */
+.hub-hero-accent {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--hero-hue) 55% 88%),
+    hsl(var(--hero-hue) 55% 94%)
+  );
+}
+
+.hub-hero-accent h1,
+.hub-hero-accent .eyebrow {
+  color: hsl(var(--hero-hue) 45% 28%);
+}
+
+.hub-hero-brand-mark {
+  margin-bottom: var(--space-3);
+  display: flex;
+  justify-content: center;
+}
+
+/* ---------- brand logo grid ---------- */
+
+.brand-logo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--space-4);
+}
+
+.brand-logo-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.brand-logo-card:hover {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-md);
+}
+
+.brand-mark {
+  object-fit: contain;
+}
+
+.brand-mark-initial {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-brand);
+  color: white;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.brand-logo-card-name {
+  font-weight: 600;
+}
+
+.brand-logo-card-count {
+  color: var(--color-muted);
+  font-size: var(--text-metadata-size);
+}
+
+/* ---------- category intelligence ---------- */
+
+.intelligence-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+}
+
+.intelligence-card-label {
+  font-size: var(--text-small-size);
+  font-weight: 600;
+  color: var(--color-accent-dark);
+  margin-bottom: var(--space-2);
+}
+
+/* ---------- sections ---------- */
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.section-head h2 {
+  font-size: var(--text-h3-size);
+  font-weight: var(--text-h3-weight);
+  line-height: var(--text-h3-line);
+}
+
+.section-head a {
+  font-size: var(--text-small-size);
+  color: var(--color-accent-dark);
+  font-weight: 600;
+}
+
+.empty-state {
+  color: var(--color-muted);
+  background: var(--color-bg-subtle);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  font-size: var(--text-body-size);
+}
+
+/* ---------- chips ---------- */
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chip {
+  display: inline-block;
+  max-width: 280px; /* real scraped product titles can run very long (100+ chars) —
+    truncate rather than let one chip blow out the whole row; full text stays in
+    the title="" attribute and as the actual link target/query */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: top;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-small-size);
+  font-weight: var(--text-small-weight);
+  background: var(--color-bg);
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.chip:hover {
+  border-color: var(--color-accent);
+  background: var(--color-bg-subtle);
+}
+
+.chip-active {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  /* Dark ink, not white — white-on-gold is 2.1:1 (fails WCAG AA); ink-on-gold
+     is 7.8:1. */
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+/* ---------- spec facets (real, data-driven category filters) ---------- */
+
+.spec-facets {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.spec-facet-label {
+  font-size: var(--text-small-size);
+  font-weight: 600;
+  color: var(--color-ink);
+  margin-bottom: var(--space-2);
+}
+
+/* ---------- product cards ---------- */
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-4);
+}
+
+/* Discovery preview rail (home page: Most Searched / Trending / Best Deals) —
+ * horizontally scrollable on EVERY breakpoint, not just mobile. Desktop gets
+ * "horizontal product rails", mobile gets "swipeable rails" — same component
+ * satisfies both, this is a preview strip with its own "View all" link, not
+ * the full browsable grid (that's .product-grid, used on category/brand/
+ * search/deals pages where paging through everything is the point). */
+.product-rail {
+  display: flex;
+  gap: var(--space-4);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x proximity;
+  padding-bottom: var(--space-2); /* room for the scrollbar so it doesn't sit on the cards */
+  -webkit-overflow-scrolling: touch;
+}
+
+.product-rail-item {
+  flex: 0 0 200px;
+  scroll-snap-align: start;
+}
+
+.product-rail-item .product-card {
+  height: 100%;
+}
+
+.product-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.product-card:hover {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-md);
+}
+
+.product-card-image {
+  aspect-ratio: 1;
+  width: 100%;
+  display: block;
+  object-fit: contain;
+  background: var(--color-bg-subtle);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-2);
+}
+
+.product-card-brand {
+  font-size: var(--text-caption-size);
+  color: var(--color-muted);
+  text-transform: uppercase;
+}
+
+.product-card-name {
+  font-size: var(--text-body-size);
+  font-weight: 600;
+}
+
+.product-card-price {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-price-size);
+  font-weight: var(--text-price-weight);
+  line-height: var(--text-price-line);
+}
+
+.badge-good {
+  font-size: var(--text-discount-size);
+  font-weight: var(--text-discount-weight);
+  color: var(--color-success);
+  background: var(--color-success-soft);
+  border-radius: 999px;
+  padding: 2px var(--space-2);
+}
+
+.product-card-rating {
+  font-size: var(--text-metadata-size);
+  color: var(--color-muted);
+}
+
+.product-card-static {
+  cursor: default;
+}
+
+.product-card-static:hover {
+  border-color: var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.chip-static {
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-small-size);
+  font-weight: var(--text-small-weight);
+  background: var(--color-bg-subtle);
+  color: var(--color-muted);
+}
+
+.hub-more-hint {
+  color: var(--color-muted);
+  font-size: var(--text-small-size);
+  margin-top: var(--space-3);
+}
+
+/* ---------- buttons ---------- */
+
+.button-primary,
+.button-secondary {
+  display: inline-block;
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-6);
+  font-weight: 600;
+  font-size: var(--text-small-size);
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.button-primary {
+  background: var(--color-brand);
+  color: white;
+  border: 1px solid var(--color-brand);
+}
+
+.button-secondary {
+  background: var(--color-bg);
+  color: var(--color-brand);
+  border: 1px solid var(--color-brand);
+}
+
+.button-small {
+  padding: var(--space-1) var(--space-4);
+  font-size: var(--text-caption-size);
+}
+
+/* ---------- omni ---------- */
+
+.omni-card {
+  border: 1px solid var(--color-accent);
+  background: var(--color-cream);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-sm);
+}
+
+.omni-headline {
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+}
+
+.omni-card ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* ---------- search page — visually distinct from category/brand hubs:
+   no big banner hero (results are transient, not a browsable destination),
+   just the search bar plus an intelligence-branded callout instead of a
+   plain muted line, reusing the same cream/gold "Omni" visual language so
+   it still reads as one system. ---------- */
+
+.search-page h1 {
+  font-size: var(--text-h2-size);
+  font-weight: var(--text-h2-weight);
+  line-height: var(--text-h2-line);
+}
+
+.search-prompt {
+  color: var(--color-muted);
+}
+
+.search-intelligence-note {
+  border: 1px solid var(--color-accent);
+  background: var(--color-cream);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  box-shadow: var(--shadow-sm);
+  font-size: var(--text-small-size);
+  color: var(--color-ink);
+}
+
+.omni-positive::before {
+  content: "✓ ";
+  color: var(--color-success);
+}
+
+.omni-caution::before {
+  content: "⚠ ";
+  color: var(--color-danger);
+}
+
+/* ---------- product page ---------- */
+
+.product-hero {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: var(--space-8);
+}
+
+.product-hero-image {
+  aspect-ratio: 1;
+  background: var(--color-bg-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.product-price {
+  font-size: var(--text-price-lg-size);
+  font-weight: var(--text-price-lg-weight);
+  line-height: var(--text-price-lg-line);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-2) 0;
+}
+
+/* Real MRP from the cheapest listing, shown struck through next to the
+   headline price — never a fabricated "was" price. */
+.product-price-mrp {
+  font-size: var(--text-body-size);
+  font-weight: 400;
+  color: var(--color-muted);
+  text-decoration: line-through;
+}
+
+.product-seller-count {
+  color: var(--color-muted);
+  font-size: var(--text-small-size);
+  margin-bottom: var(--space-3);
+}
+
+.product-rating {
+  font-size: var(--text-body-size);
+  color: var(--color-muted);
+}
+
+.product-actions {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.seller-table-wrap {
+  overflow-x: auto;
+}
+
+.seller-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.seller-table td {
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.seller-row-best {
+  background: var(--color-accent-soft);
+}
+
+.seller-name {
+  font-weight: 600;
+}
+
+.seller-best-badge {
+  margin-left: var(--space-2);
+}
+
+.seller-price-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  white-space: nowrap;
+}
+
+.seller-mrp {
+  color: var(--color-muted);
+  text-decoration: line-through;
+  font-size: var(--text-small-size);
+}
+
+.spec-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.spec-table td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--text-small-size);
+}
+
+.spec-key {
+  color: var(--color-muted);
+  width: 40%;
+}
+
+.product-rating-line {
+  color: var(--color-muted);
+  margin-top: var(--space-1);
+}
+
+/* ---------- price history ---------- */
+
+.price-history-chart {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.price-history-summary {
+  font-size: var(--text-small-size);
+  color: var(--color-muted);
+}
+
+.price-history-svg {
+  width: 100%;
+  height: auto;
+}
+
+.price-history-axis {
+  stroke: var(--color-border);
+  stroke-width: 1;
+}
+
+.price-history-axis-label {
+  font-size: 12px;
+  fill: var(--color-muted);
+}
+
+.price-history-line {
+  stroke: var(--color-accent);
+  stroke-width: 2;
+}
+
+.price-history-dot {
+  fill: var(--color-brand);
+}
+
+@media (max-width: 768px) {
+  .product-hero {
+    grid-template-columns: 1fr;
+  }
+
+  /* Real per-seller MRP/discount data makes the price column wider than the
+     viewport — let it wrap instead of pushing the Visit link off-screen. */
+  .seller-price-cell {
+    white-space: normal;
+    flex-wrap: wrap;
+  }
+
+  .seller-table td {
+    padding: var(--space-2);
+  }
+}
+
+/* ---------- reviews ---------- */
+
+.reviews-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.rating-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-width: 420px;
+}
+
+.rating-bar-row {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr 2.5rem;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-small-size);
+  color: var(--color-muted);
+}
+
+.rating-bar-track {
+  height: 8px;
+  background: var(--color-bg-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.rating-bar-fill {
+  height: 100%;
+  background: var(--color-accent);
+}
+
+.rating-bar-count {
+  text-align: right;
+}
+
+.review-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-4);
+}
+
+.review-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  box-shadow: var(--shadow-sm);
+}
+
+.review-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+}
+
+.review-stars {
+  /* --color-accent-dark, not --color-accent — the light gold is 2.1:1 on
+     white (fails WCAG AA), the dark gold is 4.9:1. */
+  color: var(--color-accent-dark);
+  font-weight: 700;
+}
+
+.review-title {
+  font-weight: 600;
+}
+
+.review-text {
+  font-size: var(--text-small-size);
+  white-space: pre-line;
+}
+
+.review-meta {
+  font-size: var(--text-metadata-size);
+  color: var(--color-muted);
+}
+
+/* ---------- guides ---------- */
+
+.guide-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-4);
+}
+
+.guide-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  box-shadow: var(--shadow-sm);
+}
+
+.guide-updated {
+  font-size: var(--text-metadata-size);
+  color: var(--color-muted);
+}
+
+.guide-picks {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-4);
+}
+
+.guide-pick {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+}
+
+.guide-pick-label {
+  font-size: var(--text-metadata-size);
+  color: var(--color-muted);
+  text-transform: uppercase;
+}
+
+.guide-pick-product {
+  font-weight: 600;
+}
+
+/* ---------- accessibility: focus + motion ---------- */
+
+/* Explicit, on-brand focus ring on every interactive element — UA defaults
+   render, but aren't guaranteed to be visible against this warm palette
+   (e.g. a default blue ring reads faintly against gold/cream). */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--color-accent-dark);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-spinner,
+  .skeleton-block {
+    animation: none;
+  }
+}

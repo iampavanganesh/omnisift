@@ -1,0 +1,50 @@
+name: backend-ci
+on:
+  push: { paths: ['apps/backend/**', 'packages/api-contracts/**'] }
+  pull_request: { paths: ['apps/backend/**', 'packages/api-contracts/**'] }
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: apps/backend } }
+    # The OpenAPI contract check boots the real application, and boot opens a
+    # Prisma connection (PrismaService.onModuleInit -> $connect). An empty
+    # database is enough — nothing reads or writes a table during generation.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: omnisift
+          POSTGRES_PASSWORD: omnisift
+          POSTGRES_DB: omnisift_ci
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: npm ci
+      - run: npx prisma generate
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+
+      # Fails when openapi.yaml is stale, when a served route is missing from
+      # it, when it documents a route that does not exist, when a $ref or
+      # security scheme is unresolved, or when generation is non-deterministic.
+      # Reuses the build above rather than rebuilding.
+      - name: Validate OpenAPI contract
+        run: node dist/scripts/validate-openapi.js
+        env:
+          # Placeholder values only — they satisfy the Zod env schema at boot.
+          # No real credential is needed to generate the document.
+          DATABASE_URL: postgresql://omnisift:omnisift@localhost:5432/omnisift_ci
+          DIRECT_URL: postgresql://omnisift:omnisift@localhost:5432/omnisift_ci
+          SUPABASE_URL: https://ci.example.supabase.co
+          SUPABASE_ANON_KEY: ci-placeholder
+          SUPABASE_SERVICE_ROLE_KEY: ci-placeholder
+          SUPABASE_JWT_SECRET: ci-placeholder
+          SERPAPI_KEY: ci-placeholder
